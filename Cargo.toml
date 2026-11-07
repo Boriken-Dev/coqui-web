@@ -1,16 +1,15 @@
 [package]
 name = "coqui-web-channel"
 version = "0.0.0-alpha.0"
-description = "Reliable message channels a browser can open natively, and their native peers: WebTransport, WebSocket and a safe fallback between them"
+description = "Deprecated: re-exports coqui-transport and coqui-transport-web, where this crate's code moved"
 readme = "README.md"
 edition = "2024"
 rust-version = "1.89"
 license = "MPL-2.0"
 repository = "https://github.com/Boriken-Dev/coqui-web-channel"
-homepage = "https://boriken-dev.github.io/coqui-web-channel/"
-keywords = ["webtransport", "websocket", "fallback", "framing", "browser"]
+keywords = ["webtransport", "websocket", "deprecated"]
 categories = ["network-programming", "web-programming::websocket"]
-exclude = [".*", "*.local.*", "/bindings/", "/tools/"]
+exclude = [".*", "*.local.*", "/tools/"]
 # Nothing is published until the owner chooses a release.
 publish = false
 
@@ -20,30 +19,15 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [features]
 default = []
-# `websocket::{Dialer, Listener}`: blocking WebSocket drivers, with TLS from the caller's rustls config.
-websocket = ["dep:tungstenite", "dep:rustls", "dep:mio", "dep:socket2"]
-# `webtransport::{Dialer, Listener}`: WebTransport drivers over a small runtime inside the driver.
-webtransport = ["dep:wtransport", "dep:tokio", "dep:rustls"]
-# `webrtc::Port`: one UDP port for WebTransport and WebRTC data channels, and a WebSocket channel that climbs onto one.
-webrtc = ["websocket", "webtransport", "dep:str0m"]
+# Each forwards to the feature of the same name in `coqui-transport-web`.
+websocket = ["coqui-transport-web/websocket"]
+webtransport = ["coqui-transport-web/webtransport"]
+webrtc = ["coqui-transport-web/webrtc"]
 
 [dependencies]
-# Endpoints are validated URLs; validation backs a trust decision, so it is not hand-written.
-url = "2.5"
-
-# Same choice and floor as guatiao-source-remote: no default features, TLS comes from the caller.
-tungstenite = { version = "0.30", optional = true, default-features = false, features = ["handshake"] }
-rustls = { version = "0.23", optional = true, default-features = false, features = ["ring", "std", "tls12"] }
-# A worker waits on its socket and on callers at once, with no wake-up of its own on an idle channel. Safe to register, which
-# `polling` is not, and already beneath quinn.
-mio = { version = "1", optional = true, default-features = false, features = ["os-poll", "net"] }
-# A dialer bound to a chosen local address: std cannot bind a TCP socket before connecting it. Already beneath tokio.
-socket2 = { version = "0.6", optional = true }
-# Pre-1.0: the only maintained HTTP/3 WebTransport session crate on quinn that browsers interoperate with.
-wtransport = { version = "0.7.2", optional = true, default-features = false, features = ["quinn", "ring"] }
-tokio = { version = "1", optional = true, default-features = false, features = ["rt-multi-thread", "time", "sync", "macros"] }
-# Sans-IO, so it runs on the worker that owns the socket. `rust-crypto` is the one provider that builds alike on every platform here.
-str0m = { version = "0.24", optional = true, default-features = false, features = ["rust-crypto"] }
+# The code that moved. The family has no releases for now: its crates depend on each other by git revision.
+coqui-transport-web = { git = "https://github.com/Boriken-Dev/coqui-transport-web", rev = "a423f0e090b65b70d1bb9d8c2ddc834db4cf8624" }
+coqui-transport = { git = "https://github.com/Boriken-Dev/coqui-transport", rev = "82563e2282149e543b95cc1dd00fbafc3bfcdf52", default-features = false }
 
 [dev-dependencies]
 serde_json = "1"
@@ -59,14 +43,9 @@ sha1 = "0.10"
 bytes = "1"
 quinn = { version = "0.11", default-features = false, features = ["bloom"] }
 tokio = { version = "1", default-features = false, features = ["rt", "time"] }
-
-[[example]]
-name = "echo"
-required-features = ["websocket", "webtransport"]
-
-[[example]]
-name = "ladder"
-required-features = ["webrtc"]
+# The old tests name these directly: they were this crate's optional dependencies, which a test can use.
+tungstenite = { version = "0.30", default-features = false, features = ["handshake"] }
+str0m = { version = "0.24", default-features = false, features = ["rust-crypto"] }
 
 [[test]]
 name = "ladder"
@@ -83,8 +62,3 @@ required-features = ["webrtc"]
 [lints.rust]
 missing_docs = "warn"
 missing_debug_implementations = "warn"
-
-[lints.clippy]
-std_instead_of_core = "warn"
-std_instead_of_alloc = "warn"
-alloc_instead_of_core = "warn"

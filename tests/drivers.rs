@@ -13,8 +13,8 @@ use std::time::{Duration, Instant};
 
 use coqui_web_channel::websocket::{self, Frames};
 use coqui_web_channel::{
-    CertificatePin, Channel, Dialer, Endpoints, Failure, Kind, Limits, NoPreflight, Phase,
-    Recovery, webtransport,
+    CertificatePin, Channel, Dialer, Endpoints, Failure, FailureExt, Kind, Limits, NoPreflight,
+    Phase, Recovery, webtransport,
 };
 use rustls::pki_types::{CertificateDer, PrivatePkcs8KeyDer};
 use url::Url;
