@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- Deprecated: the crate only re-exports `coqui-transport-web`, where its code and history moved, and `coqui-transport`, which
+  defines `Channel`, `Datagrams`, `Delivery` and `Failure`. Every public item is at its old path, behind the same features.
+- `Failure::recovery` is a method of the `FailureExt` trait: import `coqui_web_channel::FailureExt`.
+
 - Renamed: the crate is `coqui-web-channel` (`coqui_web_channel::`) and the Dart package `coqui_web_channel`, at <https://github.com/Boriken-Dev/coqui-web-channel>; modules, types and wire identifiers keep their names.
 - A server's WebSocket handshake waits on the socket's readiness rather than in blocking reads, and starts no watchdog thread. Its
   limit still bounds it in total.
@@ -18,6 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Breaking for a Dart class that implements these: `WebDatagrams.changes` and `DatagramWebChannel.carriedSignals` are new abstract members.
 - `Limits::pending` is exact: a driver holds at most that many messages its reader has not taken. A WebSocket held one more, in its
   worker, and WebTransport one more, in its read loop.
+
+### Removed
+
+- The Dart package `coqui_web_channel`, the examples, the documentation site and the Rust sources: they are in `coqui-transport-web`.
 
 ### Fixed
 

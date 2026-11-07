@@ -18,7 +18,26 @@ cargo clippy --all-targets --all-features -- -D warnings
 cargo clippy --no-default-features -- -D warnings
 cargo test --all-features
 RUSTDOCFLAGS="-D warnings" cargo doc --no-deps --all-features
-(cd bindings/dart/coqui_web_channel && dart analyze && dart test)
+```
+
+This crate only re-exports `coqui-transport-web` and `coqui-transport`: a change to the wire, the API or a behaviour belongs
+there. Here, keep the tests unchanged, since they show that the re-export is complete. [`AGENTS.md`](AGENTS.md) is the
+crate's API header and ships in the package. Files are LF, on every platform.
+
+
+## Contributor licence agreement
+
+A first pull request needs a one-time signature. The bot will comment with the exact sentence to reply with; read
+[`CLA.md`](CLA.md) first. You keep the copyright in everything you write.
+
+## Before you open a pull request
+
+```bash
+cargo fmt --all --check
+cargo clippy --all-targets --all-features -- -D warnings
+cargo clippy --no-default-features -- -D warnings
+cargo test --all-features
+RUSTDOCFLAGS="-D warnings" cargo doc --no-deps --all-features
 ```
 
 A change to the wire format changes `vectors/frames.json`, which both suites run. [`AGENTS.md`](AGENTS.md) is the
