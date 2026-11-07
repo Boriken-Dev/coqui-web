@@ -13,10 +13,3 @@ CLAUDE*
 # Rust. A library does not commit its lockfile.
 /target/
 /Cargo.lock
-
-# Dart
-.dart_tool/
-/bindings/dart/coqui_web_channel/pubspec.lock
-
-# Docs build
-/site/

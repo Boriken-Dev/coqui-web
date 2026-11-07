@@ -46,17 +46,3 @@ jobs:
       - run: cargo doc --no-deps --all-features
         env:
           RUSTDOCFLAGS: -D warnings
-
-  dart:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: bindings/dart/coqui_web_channel
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-      - uses: dart-lang/setup-dart@v1
-      - run: dart pub get
-      - run: dart analyze
-      - run: dart test
